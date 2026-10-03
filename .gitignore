@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Laravel
+backend/.env
+backend/.env.backup
+backend/.env.production
+backend/storage/*.key
+backend/database/*.sqlite
+backend/database/*.sqlite-shm
+backend/database/*.sqlite-wal
+backend/storage/logs/*.log
+backend/public/hot
+backend/public/storage
+
+# Vite / frontend
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+frontend/dist/
+frontend/dist-ssr/
+frontend/coverage/
+
+# Build outputs
+build/
+dist/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Tests / debug
+.phpunit.result.cache
+*.log
