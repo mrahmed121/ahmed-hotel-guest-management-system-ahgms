@@ -113,22 +113,26 @@ if "%TOOLS_OK%"=="0" (
 )
 echo.
 
-REM ---------- 2b. PHP extensions ----------
-echo [2b] Checking PHP extensions...
-set "EXT_OK=1"
-for %%e in (pdo_sqlite mbstring openssl fileinfo curl zip) do (
-    php -m 2>nul | findstr /i /x "%%e" >nul
-    if !errorlevel! neq 0 (
-        echo [ERROR] PHP extension missing: %%e
-        set "EXT_OK=0"
-    )
+REM ---------- 2b. PHP extensions (RELIABLE via check-env.php) ----------
+echo [2b] Checking PHP extensions via scripts\check-env.php...
+for /f "tokens=*" %%p in ('where php 2^>nul') do echo    PHP: %%p
+set "EXT_LIST="
+for /f "tokens=*" %%e in ('php -r "$j=json_decode(file_get_contents(\"backend/composer.json\"),true); foreach(($j[\"require\"]??[]) as $k=>$v){ if(str_starts_with($k,\"ext-\")) echo substr($k,4).\" \"; }" 2^>nul') do set "EXT_LIST=%%e"
+set "EXT_LIST=%EXT_LIST% pdo_sqlite"
+echo  Required extensions: %EXT_LIST%
+php "%ROOT%\scripts\check-env.php" %EXT_LIST% > "%TEMP%\AHGMS-env.txt" 2>&1
+set "ENV_EXIT=%ERRORLEVEL%"
+findstr /b "EXT:" "%TEMP%\AHGMS-env.txt"
+for /f "tokens=1* delims=:" %%a in ('findstr /b "INI_PATH:" "%TEMP%\AHGMS-env.txt" 2^>nul') do echo  Ini:%%b
+if "%ENV_EXIT%"=="2" (
+    echo [ERROR] No php.ini loaded! Run DOCTOR_AHGMS.bat for details.
+    pause & exit /b 1
 )
-if "%EXT_OK%"=="0" (
-    echo [ERROR] Install the missing PHP extensions and try again.
-    pause
-    exit /b 1
+if "%ENV_EXIT%"=="1" (
+    echo [ERROR] Missing PHP extensions. Run DOCTOR_AHGMS.bat for fix steps.
+    pause & exit /b 1
 )
-echo [OK] All required PHP extensions present.
+echo [OK] All required PHP extensions loaded.
 echo.
 
 REM ============================================================
