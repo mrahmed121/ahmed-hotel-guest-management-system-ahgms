@@ -122,3 +122,14 @@ MIT — see [LICENSE](LICENSE).
 ---
 
 **Developed by Ahmed**
+
+## Windows Quick Start
+
+Double-click `RUN_AHGMS.bat` — it handles everything automatically:
+- Verifies project structure and tools (PHP, Composer, Node.js)
+- Installs dependencies, creates `.env`, sets up database (first run)
+- Starts backend and frontend, opens browser automatically
+
+To stop: run `STOP_AHGMS.bat`.
+
+Safe to run from any directory, including as Administrator.
